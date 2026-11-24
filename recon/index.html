@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نظام التقرير اليومي الموحد – نموذج أولي</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#f4f6fa;--card:#fff;--ink:#14213d;--muted:#64708a;--line:#e3e7ef;--brand:#1d4ed8;--ok:#15803d;--okbg:#dcfce7;--warn:#b45309;--warnbg:#fef3c7;--bad:#b91c1c;--badbg:#fee2e2;--info:#0e7490;--infobg:#cffafe}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:#0f1b3d;color:#cdd6ee;padding:18px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+aside .logo{color:#fff;font-weight:700;font-size:16px;padding:6px 10px 16px;border-bottom:1px solid #ffffff1a;margin-bottom:10px}
+aside .logo small{display:block;font-weight:400;color:#8fa0c9;font-size:12px}
+aside button{display:block;width:100%;text-align:right;background:none;border:none;color:inherit;font:inherit;padding:9px 12px;border-radius:8px;cursor:pointer;margin-bottom:2px}
+aside button.active,aside button:hover{background:#ffffff14;color:#fff}
+aside .sec{font-size:11px;color:#7c8bb3;padding:12px 12px 4px}
+main{padding:20px 24px;min-width:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.top h1{font-size:20px}
+.top .meta{color:var(--muted);font-size:13px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-weight:600;font-size:12px}
+.chip.ok{background:var(--okbg);color:var(--ok)}.chip.warn{background:var(--warnbg);color:var(--warn)}.chip.bad{background:var(--badbg);color:var(--bad)}.chip.info{background:var(--infobg);color:var(--info)}
+.btn{border:1px solid var(--line);background:#fff;padding:8px 14px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer;color:var(--ink)}
+.btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn.green{background:var(--ok);color:#fff;border-color:var(--ok)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.card h2{font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h2 .n{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
+.kpi small{color:var(--muted)}
+.kpi b{display:block;font-size:22px;margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.banner{border-radius:12px;padding:14px 16px;margin-bottom:14px;font-weight:600;display:flex;gap:10px;align-items:center}
+.banner.bad{background:var(--badbg);color:var(--bad);border:1px solid #fecaca}
+.banner.ok{background:var(--okbg);color:var(--ok);border:1px solid #bbf7d0}
+.banner.warn{background:var(--warnbg);color:var(--warn);border:1px solid #fde68a}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{background:#f8fafc;font-weight:600;color:var(--muted);font-size:12px}
+td.num,th.num{text-align:left}
+tr.total td{font-weight:700;background:#f8fafc}
+.tw{overflow:auto;max-height:420px;border:1px solid var(--line);border-radius:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:1000px){.grid2,.grid4{grid-template-columns:1fr}.app{grid-template-columns:1fr}aside{position:static;height:auto;display:flex;flex-wrap:wrap;gap:4px}aside button{width:auto}aside .sec{display:none}}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:14px;text-align:center;background:#fafbfd}
+.drop b{display:block;margin-bottom:4px}
+.drop small{color:var(--muted);display:block;margin-bottom:8px}
+.drop .st{margin-top:8px;font-size:12px}
+input[type=file]{font:inherit;font-size:12px;max-width:100%}
+select,input[type=text],textarea{font:inherit;border:1px solid var(--line);border-radius:6px;padding:5px 8px;background:#fff}
+textarea{width:100%}
+.bar{height:10px;background:#eef1f6;border-radius:999px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-left:5px;background:var(--c)}
+.view{display:none}.view.active{display:block}
+.steps{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.steps span{padding:6px 12px;border-radius:999px;background:#eef1f6;color:var(--muted);font-weight:600;font-size:12px}
+.steps span.on{background:var(--brand);color:#fff}
+.steps span.done{background:var(--okbg);color:var(--ok)}
+.hint{color:var(--muted);font-size:12px;margin-top:6px}
+.watermark{display:none}
+@media print{
+  aside,.noprint,.top .row{display:none!important}
+  .app{display:block}main{padding:0}
+  .view{display:block!important;page-break-after:always}
+  #v-import{display:none!important}
+  .tw{max-height:none;overflow:visible;border:none}
+  .card{break-inside:avoid;border-color:#ccc}
+  body{background:#fff;font-size:11px}
+  .watermark.on{display:block;position:fixed;top:40%;left:0;right:0;text-align:center;font-size:70px;color:#b91c1c22;transform:rotate(-20deg);font-weight:700}
+}
+</style>
+</head>
+<body>
+<div class="watermark" id="wm">مسودة – غير معتمد</div>
+<div class="app">
+<aside>
+  <div class="logo">التقرير اليومي الموحد<small>مطابقة المدفوعات والقسائم – D+2</small></div>
+  <div class="sec">التشغيل</div>
+  <button data-v="dash" class="active">📊 اللوحة التنفيذية</button>
+  <button data-v="import">📥 استيراد البيانات</button>
+  <div class="sec">التقرير (8 أقسام)</div>
+  <button data-v="report">📄 التقرير الموحد</button>
+  <button data-v="pending">⏳ العمليات المعلقة</button>
+  <button data-v="approve">✅ المراجعة والاعتماد</button>
+</aside>
+<main>
+  <div class="top">
+    <div><h1 id="title">اللوحة التنفيذية</h1><div class="meta" id="meta"></div></div>
+    <div class="row noprint">
+      <span id="statusChip"></span>
+      <button class="btn" onclick="exportExcel()">⬇️ تصدير Excel</button>
+      <button class="btn" onclick="exportPDF()">🖨️ تصدير PDF</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <section class="view active" id="v-dash">
+    <div id="dashBanner"></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="grid2">
+      <div class="card"><h2>نتائج المطابقة البنكية</h2><div id="matchBar"></div></div>
+      <div class="card"><h2>أكبر الفروقات المفتوحة</h2><div class="tw" id="topDiffs"></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h2>المبيعات حسب القناة</h2><div id="byChannel"></div></div>
+      <div class="card"><h2>أرصدة التجار والمحافظ – الفروقات</h2><div class="tw" id="walletDiffs"></div></div>
+    </div>
+  </section>
+
+  <!-- IMPORT -->
+  <section class="view" id="v-import">
+    <div class="card">
+      <h2>تاريخ التقرير والمصادر</h2>
+      <div class="row">
+        <label>تاريخ العمليات: <input type="text" id="opDate" style="width:120px"></label>
+        <label>أعد التقرير: <input type="text" id="preparer" style="width:160px"></label>
+        <button class="btn primary" onclick="loadSample()">تحميل بيانات تجريبية</button>
+        <button class="btn" onclick="downloadTemplates()">⬇️ قوالب الاستيراد (Excel)</button>
+      </div>
+      <p class="hint">ارفع ملف Excel أو CSV لكل مصدر حسب القالب. يتم التحقق من الأعمدة تلقائياً، ثم تُشغَّل المطابقة.</p>
+    </div>
+    <div class="grid4" id="drops"></div>
+    <div class="card" style="margin-top:14px"><h2>سجل الاستيراد</h2><div id="log" class="hint">لا يوجد استيراد بعد.</div></div>
+  </section>
+
+  <!-- REPORT -->
+  <section class="view" id="v-report">
+    <div class="card"><h2><span class="n">1</span>البيانات الأساسية</h2><div id="s1"></div></div>
+    <div class="card"><h2><span class="n">2</span>المبيعات</h2><div id="s2"></div></div>
+    <div class="card"><h2><span class="n">3</span>مخزون القسائم</h2><div class="tw" id="s3"></div></div>
+    <div class="card"><h2><span class="n">4</span>أرصدة التجار والمحافظ</h2><div class="tw" id="s4"></div></div>
+    <div class="card"><h2><span class="n">5</span>المطابقة البنكية</h2><div id="s5"></div></div>
+    <div class="card"><h2><span class="n">6</span>نتائج المطابقة (تفصيلي)</h2>
+      <div class="row noprint" style="margin-bottom:8px"><select id="f6" onchange="renderS6()"><option value="">كل الحالات</option></select></div>
+      <div class="tw" id="s6"></div></div>
+    <div class="card"><h2><span class="n">7</span>العمليات المعلقة</h2><div class="tw" id="s7"></div></div>
+    <div class="card"><h2><span class="n">8</span>الملاحظات والاعتماد</h2><div id="s8"></div></div>
+  </section>
+
+  <!-- PENDING -->
+  <section class="view" id="v-pending">
+    <div class="card"><h2>معالجة العمليات المعلقة والفروقات</h2>
+      <p class="hint" style="margin-bottom:10px">لا يمكن اعتماد التقرير قبل تحديد السبب والإجراء لكل فرق مفتوح.</p>
+      <div class="tw" style="max-height:none" id="pendEdit"></div></div>
+  </section>
+
+  <!-- APPROVE -->
+  <section class="view" id="v-approve">
+    <div class="card"><h2>مسار الاعتماد</h2><div class="steps" id="steps"></div></div>
+    <div class="card"><h2>شروط الاعتماد</h2><div id="checks"></div></div>
+    <div class="card"><h2>ملاحظات المراجع</h2>
+      <textarea id="notes" rows="4" placeholder="ملاحظات عامة على تقرير اليوم..."></textarea>
+      <div class="row" style="margin-top:10px">
+        <input type="text" id="actor" placeholder="الاسم" style="width:180px">
+        <button class="btn" id="bReview" onclick="advance('reviewed')">تمت المراجعة</button>
+        <button class="btn green" id="bApprove" onclick="advance('approved')">اعتماد نهائي</button>
+        <button class="btn" onclick="advance('draft')">إعادة لمسودة</button>
+      </div>
+      <div class="hint" id="auditLog" style="margin-top:10px"></div>
+    </div>
+  </section>
+</main>
+</div>
+
+<script>
+/* ============ STATE ============ */
+const SOURCES={
+ sales:{label:'مبيعات المنصة',cols:['ref','date','merchant','channel','amount']},
+ ledger:{label:'السجلات المحاسبية',cols:['account','debit','credit']},
+ vouchers:{label:'مخزون القسائم',cols:['type','denomination','opening','received','sold','closing_actual']},
+ wallets:{label:'أرصدة التجار والمحافظ',cols:['merchant','opening','credits','debits','ledger_closing']},
+ bank:{label:'كشف البنك',cols:['bank_ref','date','amount','description']}
+};
+const LABELS={ref:'المرجع',date:'التاريخ',merchant:'التاجر',channel:'القناة',amount:'المبلغ',account:'الحساب',debit:'مدين',credit:'دائن',type:'نوع القسيمة',denomination:'الفئة',opening:'رصيد أول',received:'وارد',sold:'مباع',closing_actual:'الرصيد الفعلي',credits:'إيداعات',debits:'مسحوبات',ledger_closing:'الرصيد الدفتري',bank_ref:'مرجع البنك',description:'البيان'};
+const STATUS={matched:['مطابق','ok'],amount:['فرق مبلغ','bad'],transit:['معلّق – قيد التحويل','warn'],missing:['غير موجود بالبنك','bad'],unknown:['إيداع غير معرّف','info'],dup:['مكرر','bad']};
+const REASONS=['','تأخر تسوية بوابة الدفع','رسوم بنكية مخصومة','استرجاع (Refund)','خطأ إدخال','عملية مكررة','قيد التحقق من البنك','أخرى'];
+const ACTIONS=['','متابعة مع البنك','قيد تسوية محاسبي','إعادة مطابقة D+3','رفع لإدارة المخاطر','لا يتطلب إجراء'];
+let S={data:{},opDate:'',preparer:'',status:'draft',notes:'',audit:[],res:{}};
+const store={get(){try{return JSON.parse(localStorage.getItem('recon')||'null')}catch(e){return null}},set(){try{localStorage.setItem('recon',JSON.stringify(S))}catch(e){}}};
+const fmt=n=>(Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ============ SAMPLE DATA ============ */
+function rng(seed){return()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646}}
+function loadSample(){
+  const r=rng(42),d='2026-11-22';
+  const merchants=['متجر الريان','سوبرماركت الهدى','بقالة النخيل','محطة الوقود 7','صيدلية الشفاء','مكتبة المعرفة'];
+  const ch=['نقاط البيع','التطبيق','الموقع','الوكلاء'];
+  const sales=[];for(let i=1;i<=48;i++){sales.push({ref:'TX'+(100200+i),date:d,merchant:merchants[i%6],channel:ch[Math.floor(r()*4)],amount:Math.round((50+r()*1950)/5)*5})}
+  const bank=[];
+  sales.forEach((s,i)=>{
+    if(i===5||i===17)return;                         // missing → in transit / missing
+    if(i===23||i===31||i===40)return;
+    let a=s.amount; if(i===9)a-=12.5; if(i===28)a-=7.75;  // fees deducted
+    bank.push({bank_ref:s.ref,date:i%7===0?'2026-11-23':d,amount:a,description:'تسوية بوابة الدفع '+s.ref});
+  });
+  bank.push({bank_ref:'TX100214',date:d,amount:sales[13].amount,description:'تسوية مكررة TX100214'});
+  bank.push({bank_ref:'DEP-88231',date:d,amount:3200,description:'إيداع نقدي فرع العليا'});
+  bank.push({bank_ref:'DEP-88240',date:d,amount:450,description:'حوالة واردة بدون مرجع'});
+  const total=sales.reduce((a,b)=>a+b.amount,0);
+  const ledger=[{account:'إيرادات المبيعات',debit:0,credit:total-150},{account:'البنك – حساب التحصيل',debit:bank.reduce((a,b)=>a+b.amount,0),credit:0},{account:'ذمم بوابات الدفع',debit:0,credit:0},{account:'رسوم بنكية',debit:0,credit:0}];
+  const vouchers=[
+    {type:'شحن جوال',denomination:20,opening:1200,received:500,sold:640,closing_actual:1060},
+    {type:'شحن جوال',denomination:50,opening:800,received:0,sold:215,closing_actual:585},
+    {type:'بطاقات ألعاب',denomination:100,opening:300,received:100,sold:122,closing_actual:276},
+    {type:'بطاقات متاجر',denomination:200,opening:150,received:50,sold:41,closing_actual:159},
+    {type:'بطاقات اتصال دولية',denomination:30,opening:500,received:0,sold:88,closing_actual:412}];
+  const wallets=merchants.map((m,i)=>{const cr=sales.filter(s=>s.merchant===m).reduce((a,b)=>a+b.amount,0);const op=5000+i*1300;const db=Math.round(cr*0.6);const lc=op+cr-db-(i===2?250:0)+(i===4?90:0);return{merchant:m,opening:op,credits:cr,debits:db,ledger_closing:lc}});
+  S.data={sales,ledger,vouchers,wallets,bank};S.opDate=d;S.preparer='قسم العمليات المالية';S.status='draft';S.audit=[{t:now(),m:'تحميل بيانات تجريبية'}];S.res={};
+  $('opDate').value=d;$('preparer').value=S.preparer;
+  logMsg('تم تحميل بيانات تجريبية لكل المصادر الخمسة.');
+  recompute();
+}
+
+/* ============ IMPORT ============ */
+function buildDrops(){
+  $('drops').innerHTML=Object.entries(SOURCES).map(([k,s])=>`<div class="drop"><b>${s.label}</b><small>${s.cols.map(c=>LABELS[c]).join('، ')}</small><input type="file" accept=".xlsx,.xls,.csv" onchange="importFile('${k}',this.files[0])"><div class="st" id="st-${k}">${S.data[k]?'✓ '+S.data[k].length+' سجل':'لم يُرفع'}</div></div>`).join('');
+}
+function importFile(k,f){
+  if(!f)return;const rd=new FileReader();
+  rd.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array'});const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+      const need=SOURCES[k].cols;const have=Object.keys(rows[0]||{});
+      const map={};need.forEach(c=>{map[c]=have.find(h=>h.trim().toLowerCase()===c||h.trim()===LABELS[c])});
+      const miss=need.filter(c=>!map[c]);
+      if(miss.length){$('st-'+k).innerHTML='<span style="color:var(--bad)">أعمدة ناقصة: '+miss.map(c=>LABELS[c]).join('، ')+'</span>';return}
+      S.data[k]=rows.map(r=>{const o={};need.forEach(c=>{const v=r[map[c]];o[c]=typeof v==='string'&&!isNaN(parseFloat(v))&&/amount|debit|credit|opening|received|sold|closing|credits|debits|denomination/.test(c)?parseFloat(v):v});return o});
+      $('st-'+k).textContent='✓ '+rows.length+' سجل';logMsg(`استيراد ${SOURCES[k].label}: ${rows.length} سجل من ${f.name}`);
+      S.status='draft';recompute();
+    }catch(err){$('st-'+k).textContent='تعذر قراءة الملف'}
+  };rd.readAsArrayBuffer(f);
+}
+function downloadTemplates(){
+  const wb=XLSX.utils.book_new();
+  Object.entries(SOURCES).forEach(([k,s])=>{const ws=XLSX.utils.aoa_to_sheet([s.cols,s.cols.map(c=>LABELS[c])]);XLSX.utils.book_append_sheet(wb,ws,k)});
+  XLSX.writeFile(wb,'قوالب_الاستيراد.xlsx');
+}
+function logMsg(m){S.audit.push({t:now(),m});renderAudit()}
+const now=()=>new Date().toLocaleString('ar-SA-u-nu-latn',{hour12:false});
+
+/* ============ ENGINE ============ */
+function recompute(){
+  const {sales=[],bank=[],wallets=[],vouchers=[],ledger=[]}=S.data;
+  const old=S.res.items||[];const keep={};old.forEach(it=>keep[it.key]={reason:it.reason,action:it.action});
+  const items=[];const bankBy={};bank.forEach((b,i)=>{(bankBy[b.bank_ref]=bankBy[b.bank_ref]||[]).push(i)});
+  const usedB=new Set();
+  sales.forEach(s=>{
+    const idx=(bankBy[s.ref]||[]).filter(i=>!usedB.has(i));
+    if(!idx.length){const st=(new Date(S.opDate)-new Date(s.date))/864e5<1&&Math.abs(hash(s.ref))%2===0?'transit':'missing';items.push(mk('s:'+s.ref,s.ref,s.merchant,s.amount,0,st));return}
+    const i=idx[0];usedB.add(i);const b=bank[i];const diff=+(s.amount-b.amount).toFixed(2);
+    items.push(mk('s:'+s.ref,s.ref,s.merchant,s.amount,b.amount,Math.abs(diff)<0.01?'matched':'amount'));
+  });
+  bank.forEach((b,i)=>{if(usedB.has(i))return;const isDup=sales.some(s=>s.ref===b.bank_ref);items.push(mk('b:'+b.bank_ref+':'+i,b.bank_ref,'—',0,b.amount,isDup?'dup':'unknown',b.description))});
+  function mk(key,ref,merchant,sys,bk,status,desc){const k=keep[key]||{};return{key,ref,merchant,sys,bank:bk,diff:+(sys-bk).toFixed(2),status,desc:desc||'',reason:k.reason||'',action:k.action||''}}
+  const totSales=sales.reduce((a,b)=>a+ +b.amount,0),totBank=bank.reduce((a,b)=>a+ +b.amount,0);
+  const ledgerRev=ledger.filter(l=>/إيراد/.test(l.account)).reduce((a,b)=>a+ +b.credit- +b.debit,0);
+  const vrows=vouchers.map(v=>{const exp=+v.opening+ +v.received- +v.sold;return{...v,expected:exp,diff:+v.closing_actual-exp,value:(+v.closing_actual)*(+v.denomination)}});
+  const wrows=wallets.map(w=>{const sys=+w.opening+ +w.credits- +w.debits;return{...w,system:sys,diff:+w.ledger_closing-sys}});
+  const open=items.filter(i=>i.status!=='matched');
+  S.res={items,totSales,totBank,ledgerRev,vrows,wrows,open,
+    matched:items.filter(i=>i.status==='matched').length,
+    openAmt:open.reduce((a,b)=>a+Math.abs(b.diff),0),
+    unexplained:open.filter(i=>!i.reason||!i.action).length+wrows.filter(w=>Math.abs(w.diff)>0.01).length*0};
+  store.set();renderAll();
+}
+function hash(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))|0;return h}
+function isFinal(){return S.status==='approved'}
+
+/* ============ RENDER ============ */
+function renderAll(){
+  const R=S.res;const has=!!(S.data.sales&&S.data.sales.length);
+  $('meta').textContent=has?`تاريخ العمليات ${S.opDate} • تقرير D+2 • أعدّه: ${S.preparer||'—'}`:'لا توجد بيانات – ابدأ من «استيراد البيانات»';
+  const chip={draft:['مسودة','warn'],reviewed:['تمت المراجعة','info'],approved:['معتمد','ok']}[S.status];
+  $('statusChip').innerHTML=`<span class="chip ${chip[1]}">● ${chip[0]}</span>`;
+  $('wm').classList.toggle('on',!isFinal());
+  buildDrops();
+  if(!has){$('kpis').innerHTML='';$('dashBanner').innerHTML='<div class="banner warn">⚠️ لا توجد بيانات بعد. اذهب إلى «استيراد البيانات» أو حمّل البيانات التجريبية.</div>';return}
+  renderDash();renderReport();renderPending();renderApprove();
+}
+function renderDash(){
+  const R=S.res,final=isFinal();const unresolved=R.open.filter(i=>!i.reason||!i.action).length;
+  $('dashBanner').innerHTML=final?'<div class="banner ok">✓ التقرير معتمد – الأرقام نهائية.</div>':`<div class="banner bad">⛔ بيانات غير نهائية: ${R.open.length} فرق مفتوح (${unresolved} بدون سبب/إجراء) – لا تُعتمد الأرقام قبل الاعتماد.</div>`;
+  const pct=R.items.length?R.matched/R.items.length*100:0;
+  const mask=v=>final?fmt(v):`<span title="غير نهائي">${fmt(v)} <small style="color:var(--warn)">*</small></span>`;
+  $('kpis').innerHTML=[
+    ['إجمالي المبيعات',mask(R.totSales),`${S.data.sales.length} عملية`],
+    ['إجمالي التحصيل البنكي',mask(R.totBank),`${S.data.bank.length} حركة`],
+    ['نسبة المطابقة',pct.toFixed(1)+'%',`${R.matched} من ${R.items.length}`],
+    ['قيمة الفروقات المفتوحة',fmt(R.openAmt),`${R.open.length} بند`],
+    ['قيمة مخزون القسائم',fmt(R.vrows.reduce((a,b)=>a+b.value,0)),`${R.vrows.filter(v=>v.diff).length} صنف بفرق`],
+    ['حالة الاعتماد',{draft:'مسودة',reviewed:'تمت المراجعة',approved:'معتمد'}[S.status],`بيانات ${S.opDate}`]
+  ].map(k=>`<div class="kpi"><small>${k[0]}</small><b>${k[1]}</b><div class="sub">${k[2]}</div></div>`).join('');
+  const cnt={};R.items.forEach(i=>cnt[i.status]=(cnt[i.status]||0)+1);
+  const col={matched:'#16a34a',amount:'#dc2626',transit:'#f59e0b',missing:'#b91c1c',unknown:'#0891b2',dup:'#7c3aed'};
+  $('matchBar').innerHTML=`<div class="bar">${Object.entries(cnt).map(([k,v])=>`<i style="width:${v/R.items.length*100}%;background:${col[k]}"></i>`).join('')}</div><div class="legend">${Object.entries(cnt).map(([k,v])=>`<span style="--c:${col[k]}">${STATUS[k][0]}: ${v}</span>`).join('')}</div>`;
+  $('topDiffs').innerHTML=tbl(['المرجع','الحالة','الفرق'],[...R.open].sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff)).slice(0,6).map(i=>[i.ref,chipS(i.status),num(i.diff)]));
+  const byc={};S.data.sales.forEach(s=>byc[s.channel]=(byc[s.channel]||0)+ +s.amount);
+  const mx=Math.max(...Object.values(byc));
+  $('byChannel').innerHTML=Object.entries(byc).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div style="margin-bottom:10px"><div class="row" style="justify-content:space-between"><span>${esc(k)}</span><b>${fmt(v)}</b></div><div class="bar"><i style="width:${v/mx*100}%;background:var(--brand)"></i></div></div>`).join('');
+  $('walletDiffs').innerHTML=tbl(['التاجر','النظام','الدفتري','الفرق'],R.wrows.map(w=>[w.merchant,num(w.system),num(w.ledger_closing),diffCell(w.diff)]));
+}
+const num=v=>({h:fmt(+v),c:'num'});
+const diffCell=v=>({h:Math.abs(v)<0.01?'<span class="chip ok">0.00</span>':`<span class="chip bad">${fmt(v)}</span>`,c:'num'});
+const chipS=s=>({h:`<span class="chip ${STATUS[s][1]}">${STATUS[s][0]}</span>`});
+function tbl(head,rows,foot){
+  const td=c=>typeof c==='object'&&c!==null?`<td class="${c.c||''}">${c.h}</td>`:`<td>${esc(c)}</td>`;
+  return `<table><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(td).join('')}</tr>`).join('')||`<tr><td colspan="${head.length}" class="hint">لا توجد بنود</td></tr>`}${foot?`<tr class="total">${foot.map(td).join('')}</tr>`:''}</tbody></table>`;
+}
+function renderReport(){
+  const R=S.res;
+  $('s1').innerHTML=tbl(['البند','القيمة'],[['تاريخ العمليات',S.opDate],['نوع التقرير','تقرير يومي موحد D+2'],['أعدّه',S.preparer||'—'],['حالة الاعتماد',{draft:'مسودة',reviewed:'تمت المراجعة',approved:'معتمد'}[S.status]],['مصادر البيانات',Object.keys(SOURCES).filter(k=>S.data[k]).map(k=>SOURCES[k].label).join('، ')]]);
+  const byc={};S.data.sales.forEach(s=>{byc[s.channel]=byc[s.channel]||{n:0,a:0};byc[s.channel].n++;byc[s.channel].a+= +s.amount});
+  $('s2').innerHTML=`<div class="grid2"><div>${tbl(['القناة','العدد','المبلغ'],Object.entries(byc).map(([k,v])=>[k,v.n,num(v.a)]),['الإجمالي',S.data.sales.length,num(R.totSales)])}</div><div>${tbl(['المقارنة','المبلغ'],[['مبيعات المنصة',num(R.totSales)],['إيرادات الدفاتر المحاسبية',num(R.ledgerRev)],['الفرق',diffCell(R.totSales-R.ledgerRev)]])}</div></div>`;
+  $('s3').innerHTML=tbl(['النوع','الفئة','أول المدة','وارد','مباع','المتوقع','الفعلي','الفرق','القيمة'],R.vrows.map(v=>[v.type,num(v.denomination),num(v.opening),num(v.received),num(v.sold),num(v.expected),num(v.closing_actual),diffCell(v.diff),num(v.value)]),['الإجمالي','','','','','','','',num(R.vrows.reduce((a,b)=>a+b.value,0))]);
+  $('s4').innerHTML=tbl(['التاجر','أول المدة','إيداعات','مسحوبات','رصيد النظام','الرصيد الدفتري','الفرق'],R.wrows.map(w=>[w.merchant,num(w.opening),num(w.credits),num(w.debits),num(w.system),num(w.ledger_closing),diffCell(w.diff)]));
+  const cnt={};const amt={};R.items.forEach(i=>{cnt[i.status]=(cnt[i.status]||0)+1;amt[i.status]=(amt[i.status]||0)+Math.abs(i.diff)});
+  $('s5').innerHTML=`<div class="grid2"><div>${tbl(['البند','المبلغ'],[['إجمالي المبيعات (المنصة)',num(R.totSales)],['إجمالي التحصيل (البنك)',num(R.totBank)],['صافي الفرق',diffCell(R.totSales-R.totBank)]])}</div><div>${tbl(['الحالة','العدد','قيمة الفرق'],Object.keys(cnt).map(k=>[chipS(k),cnt[k],num(amt[k])]))}</div></div>`;
+  const f=$('f6');if(f.options.length<2)Object.entries(STATUS).forEach(([k,v])=>f.add(new Option(v[0],k)));
+  renderS6();
+  $('s7').innerHTML=tbl(['المرجع','الحالة','الفرق','السبب','الإجراء المتخذ'],R.open.map(i=>[i.ref,chipS(i.status),num(i.diff),i.reason||'—',i.action||'—']));
+  $('s8').innerHTML=`${tbl(['البند','القيمة'],[['ملاحظات المراجع',S.notes||'—'],['الحالة',{draft:'مسودة',reviewed:'تمت المراجعة',approved:'معتمد'}[S.status]]])}<div class="hint" style="margin-top:8px">${S.audit.filter(a=>/مراجعة|اعتماد|مسودة/.test(a.m)).map(a=>`${a.t} — ${esc(a.m)}`).join('<br>')}</div>`;
+}
+function renderS6(){const f=$('f6').value;$('s6').innerHTML=tbl(['المرجع','التاجر','مبلغ المنصة','مبلغ البنك','الفرق','الحالة'],S.res.items.filter(i=>!f||i.status===f).map(i=>[i.ref,i.merchant,num(i.sys),num(i.bank),num(i.diff),chipS(i.status)]))}
+function renderPending(){
+  const opt=(arr,v)=>arr.map(o=>`<option ${o===v?'selected':''}>${o}</option>`).join('');
+  $('pendEdit').innerHTML=`<table><thead><tr><th>المرجع</th><th>الحالة</th><th>البيان</th><th class="num">الفرق</th><th>السبب</th><th>الإجراء المتخذ</th></tr></thead><tbody>${S.res.open.map((i,n)=>`<tr><td>${esc(i.ref)}</td><td>${chipS(i.status).h}</td><td>${esc(i.desc||i.merchant)}</td><td class="num">${fmt(i.diff)}</td><td><select ${isFinal()?'disabled':''} onchange="setPend(${n},'reason',this.value)">${opt(REASONS,i.reason)}</select></td><td><select ${isFinal()?'disabled':''} onchange="setPend(${n},'action',this.value)">${opt(ACTIONS,i.action)}</select></td></tr>`).join('')}</tbody></table>`;
+}
+function setPend(n,k,v){S.res.open[n][k]=v;const it=S.res.items.find(x=>x.key===S.res.open[n].key);it[k]=v;if(S.status!=='draft'){S.status='draft';logMsg('عودة للمسودة بسبب تعديل بند معلق')}store.set();renderAll()}
+function checks(){
+  const R=S.res;const un=R.open.filter(i=>!i.reason||!i.action).length;
+  return[
+    ['تم استيراد جميع المصادر الخمسة',Object.keys(SOURCES).every(k=>S.data[k]&&S.data[k].length)],
+    ['لكل فرق مفتوح سبب وإجراء محدد',un===0,un?`${un} بند ناقص`:''],
+    ['تمت المراجعة قبل الاعتماد',S.status!=='draft'],
+    ['اسم المعتمد مدخل',!!$('actor').value.trim()]];
+}
+function renderApprove(){
+  const order=['draft','reviewed','approved'],names=['مسودة','تمت المراجعة','معتمد'],cur=order.indexOf(S.status);
+  $('steps').innerHTML=order.map((k,i)=>`<span class="${i<cur?'done':i===cur?'on':''}">${i<cur?'✓ ':''}${names[i]}</span>`).join('<span style="background:none">←</span>');
+  const c=checks();$('checks').innerHTML=c.map(x=>`<div style="padding:6px 0">${x[1]?'✅':'❌'} ${x[0]} ${x[2]?`<small class="hint">(${x[2]})</small>`:''}</div>`).join('');
+  $('notes').value=S.notes;
+  $('bReview').disabled=S.status!=='draft'||!c[0][1];
+  $('bApprove').disabled=S.status!=='reviewed'||!c.every(x=>x[1]);
+}
+function advance(to){
+  const who=$('actor').value.trim();
+  if(to!=='draft'&&!who){alert('اكتب اسمك أولاً');return}
+  if(to==='approved'&&!checks().every(x=>x[1])){alert('شروط الاعتماد غير مكتملة');return}
+  S.notes=$('notes').value;S.status=to;logMsg({reviewed:'تمت المراجعة بواسطة ',approved:'اعتماد نهائي بواسطة ',draft:'إعادة لمسودة بواسطة '}[to]+(who||'—'));store.set();renderAll();
+}
+function renderAudit(){$('auditLog').innerHTML=S.audit.slice(-8).map(a=>`${a.t} — ${esc(a.m)}`).join('<br>');$('log').innerHTML=S.audit.map(a=>`${a.t} — ${esc(a.m)}`).join('<br>')||'لا يوجد استيراد بعد.'}
+
+/* ============ EXPORT ============ */
+function exportExcel(){
+  if(!S.data.sales){alert('لا توجد بيانات');return}
+  const R=S.res,wb=XLSX.utils.book_new(),add=(n,aoa)=>{const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=aoa[0].map(()=>({wch:20}));ws['!views']=[{RTL:true}];XLSX.utils.book_append_sheet(wb,ws,n)};
+  const st={draft:'مسودة – غير نهائي',reviewed:'تمت المراجعة – غير نهائي',approved:'معتمد'}[S.status];
+  add('1 البيانات الأساسية',[['البند','القيمة'],['تاريخ العمليات',S.opDate],['أعدّه',S.preparer],['الحالة',st]]);
+  add('2 المبيعات',[['المرجع','التاريخ','التاجر','القناة','المبلغ'],...S.data.sales.map(s=>[s.ref,s.date,s.merchant,s.channel,+s.amount]),['الإجمالي','','','',R.totSales],['إيرادات الدفاتر','','','',R.ledgerRev]]);
+  add('3 مخزون القسائم',[['النوع','الفئة','أول المدة','وارد','مباع','المتوقع','الفعلي','الفرق','القيمة'],...R.vrows.map(v=>[v.type,+v.denomination,+v.opening,+v.received,+v.sold,v.expected,+v.closing_actual,v.diff,v.value])]);
+  add('4 أرصدة التجار',[['التاجر','أول المدة','إيداعات','مسحوبات','النظام','الدفتري','الفرق'],...R.wrows.map(w=>[w.merchant,+w.opening,+w.credits,+w.debits,w.system,+w.ledger_closing,w.diff])]);
+  add('5 المطابقة البنكية',[['البند','المبلغ'],['المبيعات',R.totSales],['البنك',R.totBank],['الفرق',R.totSales-R.totBank]]);
+  add('6 نتائج المطابقة',[['المرجع','التاجر','المنصة','البنك','الفرق','الحالة'],...R.items.map(i=>[i.ref,i.merchant,i.sys,i.bank,i.diff,STATUS[i.status][0]])]);
+  add('7 المعلقة',[['المرجع','الحالة','الفرق','السبب','الإجراء'],...R.open.map(i=>[i.ref,STATUS[i.status][0],i.diff,i.reason,i.action])]);
+  add('8 الاعتماد',[['الوقت','الحدث'],...S.audit.map(a=>[a.t,a.m]),['ملاحظات',S.notes]]);
+  XLSX.writeFile(wb,`التقرير_الموحد_${S.opDate}_${S.status}.xlsx`);
+}
+function exportPDF(){if(!S.data.sales){alert('لا توجد بيانات');return}window.print()}
+
+/* ============ NAV / INIT ============ */
+const TITLES={dash:'اللوحة التنفيذية',import:'استيراد البيانات',report:'التقرير الموحد',pending:'العمليات المعلقة',approve:'المراجعة والاعتماد'};
+document.querySelectorAll('aside button').forEach(b=>b.onclick=()=>{document.querySelectorAll('aside button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$('v-'+b.dataset.v).classList.add('active');$('title').textContent=TITLES[b.dataset.v];if(S.data.sales)renderAll()});
+$('opDate').onchange=e=>{S.opDate=e.target.value;recompute()};$('preparer').onchange=e=>{S.preparer=e.target.value;store.set();renderAll()};
+$('notes').onchange=e=>{S.notes=e.target.value;store.set()};$('actor').oninput=()=>S.data.sales&&renderApprove();
+const saved=store.get();if(saved&&saved.data&&saved.data.sales){S=saved;$('opDate').value=S.opDate;$('preparer').value=S.preparer;renderAll();renderAudit()}else{loadSample()}
+</script>
+</body>
+</html>
