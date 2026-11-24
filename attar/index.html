@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>عطارة البركة – نموذج صفحة هبوط</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--green:#2f5d3a;--green2:#1f3f27;--beige:#f5efe3;--sand:#e9dfca;--gold:#b8893a;--brown:#6b4a2b;--ink:#2a2a22;--muted:#6f6a5c;--white:#fffdf8}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Tajawal,system-ui,sans-serif;background:var(--beige);color:var(--ink);line-height:1.7}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+/* nav */
+.top{position:sticky;top:0;z-index:10;background:#f5efe3ee;backdrop-filter:blur(8px);border-bottom:1px solid var(--sand)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{font-family:Amiri,serif;font-size:26px;color:var(--green)}
+.brand span{color:var(--gold)}
+.links{display:flex;gap:22px;font-weight:700;font-size:15px}
+.links a:hover{color:var(--gold)}
+.cta{background:var(--green);color:#fff;padding:9px 18px;border-radius:999px;font-weight:800;font-size:14px}
+@media(max-width:760px){.links{display:none}}
+/* hero */
+.hero{background:radial-gradient(circle at 15% 20%,#3d7a4b 0,transparent 45%),linear-gradient(135deg,var(--green),var(--green2));color:#fff;overflow:hidden;position:relative}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center;padding-top:70px;padding-bottom:80px}
+.hero h1{font-family:Amiri,serif;font-size:clamp(34px,6vw,58px);line-height:1.25}
+.hero h1 em{font-style:normal;color:#e8c27a}
+.hero p{opacity:.9;font-size:18px;margin:16px 0 26px;max-width:520px}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:999px;font-weight:800;border:none;font:inherit;font-weight:800;cursor:pointer}
+.btn.gold{background:var(--gold);color:#fff}
+.btn.ghost{background:#ffffff1a;color:#fff;border:1px solid #ffffff55}
+.btn.wa{background:#25d366;color:#fff}
+.jars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.jar{aspect-ratio:1;border-radius:24px;background:#ffffff14;border:1px solid #ffffff2a;display:grid;place-items:center;font-size:52px}
+.jar:nth-child(2){transform:translateY(-18px)}.jar:nth-child(5){transform:translateY(-18px)}
+@media(max-width:760px){.hero .wrap{grid-template-columns:1fr;padding-top:40px}.jars{max-width:340px}}
+.stats{display:flex;gap:28px;margin-top:30px;flex-wrap:wrap}
+.stats b{display:block;font-size:24px;color:#e8c27a}
+.stats span{font-size:13px;opacity:.85}
+/* sections */
+section{padding:70px 0}
+.head{text-align:center;max-width:600px;margin:0 auto 38px}
+.head small{color:var(--gold);font-weight:800;letter-spacing:.5px}
+.head h2{font-family:Amiri,serif;font-size:clamp(28px,4vw,40px);color:var(--green)}
+.head p{color:var(--muted)}
+.grid{display:grid;gap:18px}
+.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr}}
+@media(max-width:480px){.g4{grid-template-columns:1fr}}
+.feat{background:var(--white);border:1px solid var(--sand);border-radius:20px;padding:24px;text-align:center}
+.feat i{font-style:normal;font-size:34px;display:block;margin-bottom:8px}
+.feat h3{color:var(--green);font-size:18px}
+.feat p{color:var(--muted);font-size:14px}
+.cat{background:var(--white);border-radius:22px;overflow:hidden;border:1px solid var(--sand);transition:.2s}
+.cat:hover{transform:translateY(-4px);box-shadow:0 14px 30px #6b4a2b1a}
+.cat .ph{height:150px;display:grid;place-items:center;font-size:64px}
+.cat .bd{padding:18px}
+.cat h3{color:var(--green)}
+.cat p{font-size:14px;color:var(--muted)}
+.cat .tag{display:inline-block;margin-top:10px;font-size:13px;font-weight:800;color:var(--gold)}
+.alt{background:var(--sand)}
+.pk{background:var(--white);border-radius:24px;padding:28px;border:2px solid transparent;position:relative}
+.pk.best{border-color:var(--gold);box-shadow:0 18px 40px #b8893a2a}
+.pk .rib{position:absolute;top:-13px;right:24px;background:var(--gold);color:#fff;font-size:12px;font-weight:800;padding:4px 12px;border-radius:999px}
+.pk h3{font-size:20px;color:var(--green)}
+.pk .pr{font-size:36px;font-weight:800;color:var(--brown);margin:8px 0}
+.pk .pr small{font-size:15px;color:var(--muted)}
+.pk ul{list-style:none;margin:14px 0 20px}
+.pk li{padding:6px 0;border-bottom:1px dashed var(--sand);font-size:15px}
+.pk li::before{content:"✓ ";color:var(--green);font-weight:800}
+.pk .btn{width:100%;justify-content:center;background:var(--green);color:#fff}
+.pk.best .btn{background:var(--gold)}
+.rev{background:var(--white);border-radius:20px;padding:22px;border:1px solid var(--sand)}
+.rev .st{color:var(--gold);letter-spacing:2px}
+.rev p{margin:10px 0;font-size:15px}
+.rev b{color:var(--green)}
+/* order */
+.order{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;border-radius:28px;padding:36px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
+@media(max-width:760px){.order{grid-template-columns:1fr;padding:24px}}
+.order h2{font-family:Amiri,serif;font-size:34px}
+.order p{opacity:.9}
+form{background:#fff;color:var(--ink);border-radius:20px;padding:20px;display:grid;gap:10px}
+form input,form select,form textarea{width:100%;padding:12px;border:1px solid var(--sand);border-radius:12px;font:inherit;background:var(--white)}
+form .btn{justify-content:center}
+footer{text-align:center;padding:30px 16px;color:var(--muted);font-size:14px}
+.float{position:fixed;bottom:18px;left:18px;width:58px;height:58px;border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;font-size:28px;box-shadow:0 10px 25px #0003;z-index:20}
+</style>
+</head>
+<body>
+<div class="top"><div class="wrap">
+  <a class="brand" href="#">عطارة <span>البركة</span></a>
+  <nav class="links"><a href="#feat">لماذا نحن</a><a href="#cats">المنتجات</a><a href="#packs">الباقات</a><a href="#revs">آراء العملاء</a></nav>
+  <a class="cta" href="#order">اطلب الآن</a>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <div>
+    <h1>خيرات الطبيعة<br><em>من المزرعة لبيتك</em></h1>
+    <p>توابل مطحونة طازجة، أعشاب منتقاة، عسل طبيعي موثوق، وزيوت معصورة على البارد. جودة تشمّها قبل ما تذوقها.</p>
+    <div class="btns"><a class="btn gold" href="#cats">تصفح المنتجات</a><a class="btn ghost" href="#order">💬 اطلب عبر واتساب</a></div>
+    <div class="stats"><div><b>+120</b><span>منتج طبيعي</span></div><div><b>+8,000</b><span>عميل سعيد</span></div><div><b>24 ساعة</b><span>توصيل داخل المدينة</span></div></div>
+  </div>
+  <div class="jars"><div class="jar">🌶️</div><div class="jar">🍯</div><div class="jar">🌿</div><div class="jar">🫒</div><div class="jar">🧄</div><div class="jar">🌰</div></div>
+</div></header>
+
+<section id="feat"><div class="wrap">
+  <div class="head"><small>لماذا عطارة البركة؟</small><h2>جودة ما تحتاج شرح</h2></div>
+  <div class="grid g4">
+    <div class="feat"><i>🌱</i><h3>طبيعي 100%</h3><p>بدون مواد حافظة أو إضافات صناعية</p></div>
+    <div class="feat"><i>⚙️</i><h3>طحن يومي</h3><p>نطحن التوابل بنفس اليوم للحفاظ على النكهة</p></div>
+    <div class="feat"><i>🔬</i><h3>عسل مفحوص</h3><p>شهادات فحص لكل دفعة عسل</p></div>
+    <div class="feat"><i>🚚</i><h3>توصيل سريع</h3><p>خلال 24 ساعة، والدفع عند الاستلام</p></div>
+  </div>
+</div></section>
+
+<section id="cats" class="alt"><div class="wrap">
+  <div class="head"><small>أقسامنا</small><h2>اختر من خيرات الأرض</h2><p>كل قسم منتقى بعناية من أفضل المصادر</p></div>
+  <div class="grid g4">
+    <div class="cat"><div class="ph" style="background:#f3d9b8">🌶️</div><div class="bd"><h3>التوابل والبهارات</h3><p>بهارات كبسة، كمون، كركم، فلفل أسود...</p><span class="tag">من 12 ر.س</span></div></div>
+    <div class="cat"><div class="ph" style="background:#dfe9d2">🌿</div><div class="bd"><h3>الأعشاب</h3><p>بابونج، يانسون، مرمرية، زعتر بري...</p><span class="tag">من 9 ر.س</span></div></div>
+    <div class="cat"><div class="ph" style="background:#f6e2a8">🍯</div><div class="bd"><h3>العسل</h3><p>سدر، سمر، طلح، مجرى – أصلي ومفحوص</p><span class="tag">من 65 ر.س</span></div></div>
+    <div class="cat"><div class="ph" style="background:#e6e3c4">🫒</div><div class="bd"><h3>الزيوت الطبيعية</h3><p>زيت زيتون، حبة سوداء، سمسم، جوز هند</p><span class="tag">من 25 ر.س</span></div></div>
+  </div>
+</div></section>
+
+<section id="packs"><div class="wrap">
+  <div class="head"><small>الباقات</small><h2>باقات توفّر عليك</h2><p>مجموعات مختارة بأسعار أقل من الشراء المنفرد</p></div>
+  <div class="grid g3">
+    <div class="pk"><h3>باقة المطبخ</h3><div class="pr">89 <small>ر.س</small></div><ul><li>6 أنواع بهارات أساسية</li><li>بهارات كبسة خاصة</li><li>علب حفظ زجاجية</li></ul><a class="btn" href="#order" onclick="pick('باقة المطبخ')">اطلب الباقة</a></div>
+    <div class="pk best"><span class="rib">الأكثر طلباً</span><h3>باقة العافية</h3><div class="pr">179 <small>ر.س</small></div><ul><li>عسل سدر 500 جم</li><li>زيت حبة سوداء</li><li>4 أنواع أعشاب</li><li>توصيل مجاني</li></ul><a class="btn" href="#order" onclick="pick('باقة العافية')">اطلب الباقة</a></div>
+    <div class="pk"><h3>باقة الهدية</h3><div class="pr">249 <small>ر.س</small></div><ul><li>صندوق خشبي فاخر</li><li>عسل + زيت + أعشاب</li><li>بطاقة إهداء مكتوبة</li></ul><a class="btn" href="#order" onclick="pick('باقة الهدية')">اطلب الباقة</a></div>
+  </div>
+</div></section>
+
+<section id="revs" class="alt"><div class="wrap">
+  <div class="head"><small>آراء العملاء</small><h2>ثقة نعتز فيها</h2></div>
+  <div class="grid g3">
+    <div class="rev"><div class="st">★★★★★</div><p>"البهارات ريحتها تفوح من أول ما فتحت الكيس، فرق واضح عن السوبرماركت."</p><b>أم عبدالله – الرياض</b></div>
+    <div class="rev"><div class="st">★★★★★</div><p>"عسل السدر أصلي ١٠٠٪ وجاني مع شهادة الفحص. صرت زبون دائم."</p><b>فهد – جدة</b></div>
+    <div class="rev"><div class="st">★★★★★</div><p>"طلبت باقة الهدية لوالدتي، التغليف فخم والتوصيل بنفس اليوم."</p><b>نورة – الدمام</b></div>
+  </div>
+</div></section>
+
+<section id="order"><div class="wrap">
+  <div class="order">
+    <div><h2>اطلب الآن بسهولة</h2><p>عبّ النموذج ويوصلنا طلبك مباشرة على واتساب، ونأكد معك خلال دقائق. الدفع عند الاستلام.</p></div>
+    <form onsubmit="send(event)">
+      <input id="n" placeholder="الاسم" required>
+      <input id="p" placeholder="رقم الجوال" inputmode="tel" required>
+      <select id="w"><option>باقة العافية</option><option>باقة المطبخ</option><option>باقة الهدية</option><option>طلب منتجات منفردة</option></select>
+      <input id="c" placeholder="المدينة والحي" required>
+      <textarea id="m" rows="2" placeholder="ملاحظات (اختياري)"></textarea>
+      <button class="btn wa" type="submit">💬 إرسال الطلب على واتساب</button>
+    </form>
+  </div>
+</div></section>
+
+<footer>© عطارة البركة – نموذج تجريبي لصفحة هبوط</footer>
+<a class="float" href="https://wa.me/966500000000" target="_blank" aria-label="واتساب">💬</a>
+<script>
+const WA="966500000000";
+function pick(v){document.getElementById('w').value=v}
+function send(e){e.preventDefault();
+ const g=id=>document.getElementById(id).value.trim();
+ let t=`🌿 *طلب جديد – عطارة البركة*\n\n📦 ${g('w')}\n👤 ${g('n')}\n📞 ${g('p')}\n📍 ${g('c')}`;
+ if(g('m'))t+=`\n📝 ${g('m')}`;
+ window.open(`https://wa.me/${WA}?text=${encodeURIComponent(t)}`,'_blank');}
+</script>
+</body>
+</html>

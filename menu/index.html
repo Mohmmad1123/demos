@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>منيو مطعم الديرة – نموذج تجريبي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf6f0;--card:#fff;--ink:#2b2118;--muted:#8a7a6a;--brand:#c2410c;--brand2:#9a3412;--line:#eee3d6;--ok:#16a34a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tajawal,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:110px}
+header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:28px 16px 22px;text-align:center}
+header .logo{width:64px;height:64px;border-radius:50%;background:#fff2;display:grid;place-items:center;font-size:32px;margin:0 auto 10px;border:2px solid #fff6}
+header h1{font-size:24px;font-weight:800}
+header p{opacity:.9;font-size:14px;margin-top:4px}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badges span{background:#fff2;padding:4px 10px;border-radius:20px;font-size:12px}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:8px;overflow-x:auto;padding:12px 16px;border-bottom:1px solid var(--line)}
+nav button{flex:none;border:1px solid var(--line);background:#fff;padding:8px 16px;border-radius:22px;font:inherit;font-weight:700;color:var(--ink);cursor:pointer}
+nav button.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+main{max-width:760px;margin:0 auto;padding:8px 16px}
+h2{font-size:19px;margin:18px 0 10px}
+.item{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:10px;align-items:center}
+.thumb{width:76px;height:76px;border-radius:12px;display:grid;place-items:center;font-size:40px;flex:none}
+.info{flex:1;min-width:0}
+.info h3{font-size:16px}
+.info p{font-size:13px;color:var(--muted);margin:3px 0 6px;line-height:1.5}
+.price{font-weight:800;color:var(--brand)}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:32px;height:32px;border-radius:50%;border:none;background:var(--brand);color:#fff;font-size:20px;cursor:pointer;line-height:1}
+.qty button.minus{background:#f3e8dc;color:var(--ink)}
+.qty b{min-width:18px;text-align:center}
+.cartbar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:12px 16px;display:none;box-shadow:0 -6px 20px #0001}
+.cartbar.show{display:block}
+.cartbar .row{max-width:760px;margin:0 auto;display:flex;gap:12px;align-items:center}
+.cartbar .sum{flex:1;font-size:14px}
+.cartbar .sum b{font-size:18px;color:var(--brand)}
+.btn{border:none;border-radius:14px;padding:13px 18px;font:inherit;font-weight:800;cursor:pointer}
+.btn.wa{background:#25d366;color:#fff}
+.btn.main{background:var(--brand);color:#fff}
+.sheet{position:fixed;inset:0;background:#0006;display:none;align-items:flex-end;z-index:20}
+.sheet.show{display:flex}
+.panel{background:#fff;width:100%;max-width:760px;margin:0 auto;border-radius:20px 20px 0 0;padding:20px 16px;max-height:90vh;overflow:auto}
+.panel h2{margin-top:0}
+.line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
+input,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;font:inherit;background:#fffdfa}
+.loc{display:flex;gap:8px;align-items:center;margin-top:8px}
+.loc small{color:var(--muted)}
+.loc small.ok{color:var(--ok);font-weight:700}
+.actions{display:flex;gap:8px;margin-top:16px}
+.actions .btn{flex:1}
+.note{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:10px;font-size:12px;margin:14px 16px 0;text-align:center;color:#9a3412}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🍽️</div>
+  <h1>مطعم الديرة</h1>
+  <p>أكل بيتي على أصوله – اطلب بضغطة واحدة</p>
+  <div class="badges"><span>🕒 يومياً 12م – 1ص</span><span>🛵 توصيل سريع</span><span>⭐ 4.8</span></div>
+</header>
+<div class="note">نموذج تجريبي: اختر أصناف، حدد موقعك، وأرسل الطلب على واتساب</div>
+<nav id="tabs"></nav>
+<main id="menu"></main>
+
+<div class="cartbar" id="cartbar"><div class="row">
+  <div class="sum"><span id="count">0</span> صنف · المجموع <b id="total">0</b> ر.س</div>
+  <button class="btn main" onclick="openSheet()">إتمام الطلب</button>
+</div></div>
+
+<div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()">
+  <div class="panel">
+    <h2>🧾 ملخص الطلب</h2>
+    <div id="lines"></div>
+    <div class="line"><b>المجموع</b><b id="total2"></b></div>
+    <label>الاسم</label><input id="name" placeholder="اسمك">
+    <label>رقم الجوال</label><input id="phone" inputmode="tel" placeholder="05xxxxxxxx">
+    <label>ملاحظات (اختياري)</label><textarea id="notes" rows="2" placeholder="بدون بصل، زيادة صوص..."></textarea>
+    <label>موقع التوصيل</label>
+    <div class="loc"><button class="btn main" type="button" onclick="getLoc()">📍 حدد موقعي</button><small id="locs">لم يُحدد بعد</small></div>
+    <div class="actions">
+      <button class="btn wa" onclick="send()">إرسال الطلب على واتساب</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const WHATSAPP = "966500000000"; // رقم المطعم
+const MENU = [
+ {cat:"الأطباق الرئيسية",items:[
+  {id:1,n:"كبسة لحم",d:"أرز بسمتي مع لحم غنم طازج وبهارات الكبسة",p:45,e:"🍛",c:"#fde7d4"},
+  {id:2,n:"مندي دجاج",d:"نص دجاجة مندي على الفحم مع أرز ودقوس",p:32,e:"🍗",c:"#fef3c7"},
+  {id:3,n:"مظبي لحم",d:"لحم على الحجر مع أرز أصفر",p:52,e:"🥩",c:"#fee2e2"}]},
+ {cat:"المشويات",items:[
+  {id:4,n:"مشاوي مشكلة",d:"كباب، شيش طاووق، أوصال – لشخصين",p:68,e:"🍢",c:"#ffedd5"},
+  {id:5,n:"شيش طاووق",d:"صدر دجاج متبل مع ثومية وبطاطس",p:29,e:"🥙",c:"#fef9c3"}]},
+ {cat:"المقبلات",items:[
+  {id:6,n:"حمص",d:"حمص بالطحينة وزيت زيتون",p:12,e:"🥣",c:"#ecfccb"},
+  {id:7,n:"سمبوسة (6 حبات)",d:"لحم أو جبن – مقرمشة",p:15,e:"🥟",c:"#fef3c7"},
+  {id:8,n:"سلطة فتوش",d:"خضار طازجة مع خبز محمص ودبس رمان",p:14,e:"🥗",c:"#dcfce7"}]},
+ {cat:"المشروبات والحلا",items:[
+  {id:9,n:"عصير ليمون بالنعناع",d:"طازج ومنعش",p:10,e:"🍋",c:"#fef9c3"},
+  {id:10,n:"شاي مغربي",d:"إبريق لشخصين",p:9,e:"🫖",c:"#e0f2fe"},
+  {id:11,n:"كنافة بالقشطة",d:"تقدم ساخنة",p:22,e:"🍮",c:"#fde68a"}]}
+];
+const cart = {};
+let loc = null;
+const all = MENU.flatMap(c=>c.items);
+const tabs = document.getElementById('tabs'), menu = document.getElementById('menu');
+MENU.forEach((c,i)=>{
+  const b=document.createElement('button');b.textContent=c.cat;if(!i)b.className='active';
+  b.onclick=()=>{document.getElementById('c'+i).scrollIntoView({behavior:'smooth',block:'start'});tabs.querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active')};
+  tabs.appendChild(b);
+  const s=document.createElement('section');s.id='c'+i;s.style.scrollMarginTop='70px';
+  s.innerHTML=`<h2>${c.cat}</h2>`+c.items.map(it=>`
+   <div class="item"><div class="thumb" style="background:${it.c}">${it.e}</div>
+    <div class="info"><h3>${it.n}</h3><p>${it.d}</p><span class="price">${it.p} ر.س</span></div>
+    <div class="qty"><button class="minus" onclick="add(${it.id},-1)">−</button><b id="q${it.id}">0</b><button onclick="add(${it.id},1)">+</button></div></div>`).join('');
+  menu.appendChild(s);
+});
+function add(id,d){cart[id]=Math.max(0,(cart[id]||0)+d);document.getElementById('q'+id).textContent=cart[id];render()}
+function totals(){let n=0,t=0;for(const id in cart){const it=all.find(x=>x.id==id);n+=cart[id];t+=cart[id]*it.p}return{n,t}}
+function render(){const{n,t}=totals();document.getElementById('count').textContent=n;document.getElementById('total').textContent=t;document.getElementById('cartbar').classList.toggle('show',n>0)}
+function openSheet(){
+  const{t}=totals();
+  document.getElementById('lines').innerHTML=Object.entries(cart).filter(([,q])=>q).map(([id,q])=>{const it=all.find(x=>x.id==id);return`<div class="line"><span>${q} × ${it.n}</span><span>${q*it.p} ر.س</span></div>`}).join('');
+  document.getElementById('total2').textContent=t+' ر.س';
+  document.getElementById('sheet').classList.add('show');
+}
+function closeSheet(){document.getElementById('sheet').classList.remove('show')}
+function getLoc(){
+  const s=document.getElementById('locs');
+  if(!navigator.geolocation){s.textContent='المتصفح لا يدعم تحديد الموقع';return}
+  s.textContent='جاري التحديد...';
+  navigator.geolocation.getCurrentPosition(p=>{loc=p.coords;s.textContent='✓ تم تحديد موقعك';s.className='ok'},()=>{s.textContent='تعذر التحديد – اكتب العنوان في الملاحظات';s.className=''},{enableHighAccuracy:true,timeout:10000});
+}
+function send(){
+  const name=document.getElementById('name').value.trim(),phone=document.getElementById('phone').value.trim(),notes=document.getElementById('notes').value.trim();
+  if(!name||!phone){alert('فضلاً اكتب الاسم ورقم الجوال');return}
+  const{t}=totals();
+  let m=`🧾 *طلب جديد – مطعم الديرة*\n\n`;
+  for(const[id,q]of Object.entries(cart)){if(!q)continue;const it=all.find(x=>x.id==id);m+=`• ${q} × ${it.n} = ${q*it.p} ر.س\n`}
+  m+=`\n💰 *المجموع: ${t} ر.س*\n\n👤 ${name}\n📞 ${phone}\n`;
+  if(notes)m+=`📝 ${notes}\n`;
+  if(loc)m+=`📍 الموقع: https://maps.google.com/?q=${loc.latitude},${loc.longitude}\n`;
+  window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(m)}`,'_blank');
+}
+</script>
+</body>
+</html>
